@@ -198,6 +198,13 @@ export default class IconFolderPlugin extends Plugin {
                 iconNameWithPrefix: iconName,
               });
 
+              // Update icon in frontmatter when setting is enabled.
+              if (this.getSettings().iconInFrontmatterEnabled) {
+                this.app.fileManager.processFrontMatter(file, (frontmatter) => {
+                  frontmatter.icon = iconName;
+                });
+              }
+
               // Update icon in tab when setting is enabled.
               if (this.getSettings().iconInTabsEnabled) {
                 const tabLeaves = iconTabs.getTabLeavesOfFilePath(
@@ -323,6 +330,13 @@ export default class IconFolderPlugin extends Plugin {
     this.notifyPlugins();
 
     let didUpdate = false;
+
+    // Update icon in frontmatter when setting is enabled.
+    if (this.getSettings().iconInFrontmatterEnabled) {
+      this.app.fileManager.processFrontMatter(file, (frontmatter) => {
+        delete frontmatter.icon;
+      });
+    }
 
     // Refreshes the icon tab and title icon for custom rules.
     for (const rule of customRule.getSortedRules(this)) {
